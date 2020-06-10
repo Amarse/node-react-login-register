@@ -1,3 +1,5 @@
+'use strict';
+
 //스키마란? 유저 정보거나, 게시판의 정보의 타입을 정해주는 것.
 //모델은 스키마를 감싸주는 역할을 한다.
 
@@ -34,4 +36,4 @@ const userSchema = mongoose.Schema({
 //모델로 감싸준다.
 const User = mongoose.model('User', userSchema);
 
-module.exports = { User };
+module.exports = { User }; //user 내보내기

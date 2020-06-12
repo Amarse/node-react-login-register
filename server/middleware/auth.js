@@ -13,10 +13,10 @@ let  auth = (req, res, next) => {
     if(err) throw err;
     if(!user) return res.json({ isAuth: false, error: true })
 
-    //토큰과 유저를 req를 넣으줌으로 인해 클라이언트쪽에서 쓸수있게 넣어준다.
+    //토큰과 유저를 req를 넣어 줌으로 인해 클라이언트 쪽에서 쓸 수 있게 넣어 준다.
     req.token = token;
     req.user = user;
-    next();// next로 다음으로 넘겨준다.
+    next();// next()로 다음으로 넘겨준다.
   })
   //유저가 있으면 인증 되고,
 

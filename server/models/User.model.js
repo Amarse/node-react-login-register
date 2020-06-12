@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    trim: true, //공뱅을 없애주는것
+    trim: true, //공백을 없애주는것
     unique: 1,
   },
   password: {

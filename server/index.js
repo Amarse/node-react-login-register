@@ -54,12 +54,12 @@ app.post('/api/users/login', (req, res) => {
       });
     }
     //데이터베이스에 이메일이 있다면 패스워드를 비교한다.
-    console.log('req info', req.body);
+    // console.log('req info', req.body);
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       //비밀번호가 틀리다면
 
-      console.log('match', isMatch);
+      // console.log('match', isMatch);
       if (!isMatch)
         return res.json({
           loginSuccess: false,
@@ -95,8 +95,9 @@ app.get('/api/users/auth', auth, (req, res) => {
   });
 });
 
+//로그아웃
 app.get('/api/users/logout', auth, (req, res) => {
-  User.findByIdAndUpdate({ _id: req.user._id }, { token: '' }, (err, user) => {
+  User.findByIdAndUpdate({ _id: req.user._id }, { token: '' }, (err, user) => {//토큰을 지워준다.
     if (err) return res.json({ seccess: false, err });
     return res.status(200).send({ seccess: true });
   });

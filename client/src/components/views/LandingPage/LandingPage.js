@@ -1,21 +1,32 @@
-import React,{ useEffect }from 'react';
+import React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
-
-function LandingPage() {
-
-  useEffect(() => {
-    axios.get('/api/hello')//서버로 보낸다
-    .then(res => console.log(res.data)) //서버에서 보내온 걸 받는다
-  }, [])
-
-
+function LandingPage(props) {
+  const onClickHandler = () => {
+    axios.get('/api/users/logout').then((response) => {
+      if (response.data.seccess) {
+        props.history.push('/login');
+      } else {
+        alert('Err');
+      }
+    });
+  };
 
   return (
-    <div>
-      landing
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100vh',
+      }}
+    >
+      <h2>시작페이지</h2>
+      <button onClick={onClickHandler}>로그아웃</button>
     </div>
-  )
+  );
 }
 
-export default LandingPage
+export default withRouter(LandingPage);

@@ -22,7 +22,7 @@ function NavMenu(props) {
 
   if (user.userData && !user.userData.isAuth) {
     return (
-      <div className="navbar">
+      <div className="menu">
         <a href="/login">Signin</a>
         <a href="/register">Signup</a>
       </div>

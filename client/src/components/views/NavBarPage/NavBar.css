@@ -1,0 +1,11 @@
+.navbar {
+  display: flex;
+
+}
+
+.logout {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+  cursor: pointer;
+}

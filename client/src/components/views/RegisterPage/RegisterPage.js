@@ -1,49 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/User.action';
 import { withRouter } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import './Register.css';
 
 function RegisterPage(props) {
+  const { register, handleSubmit, errors, watch } = useForm();
   const dispatch = useDispatch();
-  //이름
-  const [name, setName] = useState('');
-  //이메일
-  const [email, setEmail] = useState('');
-  //패스워드
-  const [password, setPassword] = useState('');
-  //패스워드 확인
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const onNameHandler = (event) => {
-    setName(event.currentTarget.value);
-  };
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
+  const onSubmitHendler = (values) => {
+    console.log('values', values);
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
-
-  const onConPasswordHandler = (event) => {
-    setConfirmPassword(event.currentTarget.value);
-  };
-  const onSubmitHendler = (event) => {
-    event.preventDefault(); //이벤트가 리프레쉬되는걸 막는다.
-    console.log('email', email);
-
-    if (password !== confirmPassword) {
-      return alert('비밀번호를 확인해주세요');
-    }
-
-    let body = {
-      name: name,
-      email: email,
-      password: password,
-    };
-    dispatch(registerUser(body)).then((response) => {
+    dispatch(registerUser(values)).then((response) => {
       if (response.payload.success) {
-        props.history.push('/login');
+        props.history.push('/');
       } else {
         alert('Failed to sign up.');
       }
@@ -51,33 +22,61 @@ function RegisterPage(props) {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
-    >
-      <form
-        style={{ display: 'flex', flexDirection: 'column' }}
-        onSubmit={onSubmitHendler}
-      >
-        <label>Name</label>
-        <input type="text" value={name} onChange={onNameHandler} />
-        <label>Email</label>
-        <input type="email" value={email} onChange={onEmailHandler} />
-        <label>Password</label>
-        <input type="password" value={password} onChange={onPasswordHandler} />
-        <label>Confirm Password</label>
+    <div className="login-form">
+      <h2>Sign Up!</h2>
+      <form onSubmit={handleSubmit(onSubmitHendler)}>
+        <label htmlFor="inputName">Name</label>
+        <input
+          type="text"
+          id="inputName"
+          name="name"
+          ref={register({ required: 'Enter your Name' })}
+        />
+        <label htmlFor="inputEmail">Email</label>
+        <input
+          type="email"
+          id="inputEmail"
+          name="email"
+          ref={register({
+            required: 'Enter your Email',
+            pattern: {
+              value: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+              message: 'Enter a valid e-mail address',
+            },
+          })}
+        />
+        {errors.email && <p className="error">{errors.email.message}</p>}
+        <label htmlFor="inputPassword">Password</label>
         <input
           type="password"
-          value={confirmPassword}
-          onChange={onConPasswordHandler}
+          id="inputPassword"
+          name="password"
+          ref={register({
+            required: 'Enter your Password',
+            minLength: 8,
+            maxLength: 15,
+            pattern: {
+              value: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+              message: 'Enter a valid password',
+            },
+          })}
         />
-        <br />
-        <button>login</button>
+        {errors.password && <p className="error">{errors.password.message}</p>}
+        <label htmlFor="inputRePassword">Repeat password</label>
+        <input
+          type="password"
+          id="inputRePassword"
+          name="password_repeat"
+          ref={register({
+            validate: (value) => {
+              return value === watch('password') || 'The passwords do not match';
+            }
+          })}
+        />
+        {errors.password_repeat && (
+          <p className="error">{errors.password_repeat.message}</p>
+        )}
+        <button type="submit">login</button>
       </form>
     </div>
   );

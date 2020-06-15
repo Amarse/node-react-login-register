@@ -1,60 +1,72 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { loginUser } from '../../../_actions/User.action';
 import { withRouter } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import './Login.css'
 
 function LoginPage(props) {
+  const { register, handleSubmit, errors } = useForm();
   const dispatch = useDispatch();
-  //이메일
-  const [email, setEmail] = useState('');
-  //패스워드
-  const [password, setPassword] = useState('');
 
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
+  const onSubmitHendler = (values) => {
+    console.log('values', values);
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
-
-  const onSubmitHendler = (event) => {
-    event.preventDefault(); //이벤트가 리프레쉬되는걸 막는다.
-    console.log('email', email);
-
-    let body = {
-      email: email,
-      password: password,
-    };
-    dispatch(loginUser(body)).then((response) => {
+    dispatch(loginUser(values)).then((response) => {
       if (response.payload.loginSuccess) {
         props.history.push('/');
       } else {
-        alert('Err');
+        alert('이메일 혹은 아이디를 확인해주세요');
       }
     });
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
-    >
-      <form
-        style={{ display: 'flex', flexDirection: 'column' }}
-        onSubmit={onSubmitHendler}
-      >
-        <label>Email</label>
-        <input type="email" value={email} onChange={onEmailHandler} />
-        <label>Password</label>
-        <input type="password" value={password} onChange={onPasswordHandler} />
-        <br />
-        <button>login</button>
+    <div  className="login-form">
+      <h3>Sign in</h3>
+      <form onSubmit={handleSubmit(onSubmitHendler)}>
+      
+          <label htmlFor="inputEmail">Email</label>
+          <input
+            className="form-control"
+            type="email"
+            id="inputEmail"
+            name="email"
+            ref={register({
+              required: 'Enter your Email',
+              pattern: {
+                value: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                message: 'Enter a valid e-mail address',
+              },
+            })}
+          />
+       
+        {errors.email && <p className="error">{errors.email.message}</p>}
+       
+          <label htmlFor="inputPassword">Password</label>
+          <input
+            className="form-control"
+            type="password"
+            id="inputPassword"
+            name="password"
+            ref={register({
+              required: 'Enter your Password',
+              minLength: 8,
+              maxLength: 15,
+              pattern: {
+                value: /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                message: 'Enter a valid password',
+              },
+            })}
+          />
+        
+        {errors.password && <p className="error">{errors.password.message}</p>}
+
+        <button type="submit">
+          login
+        </button>
+        <a href="/register">Sign up?</a>
+      
       </form>
     </div>
   );

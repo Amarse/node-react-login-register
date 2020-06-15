@@ -1,12 +1,17 @@
-import React from 'react'
-import
+import React from 'react';
+
+
 
 function Footer() {
-  return (
-    <div>
-      footer
-    </div>
-  )
+    return (
+        <div style={{
+            height: '80px', display: 'flex',
+            flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'center', fontSize:'1rem'
+        }}>
+           <p>hana Kim!</p>
+        </div>
+    )
 }
 
-export default Footer
+export default Footer;
